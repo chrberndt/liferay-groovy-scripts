@@ -10,4 +10,5 @@ for (SchedulerResponse schedulerResponse : schedulerResponses ) {
     out.println(SchedulerEngineHelperUtil.getNextFireTime(schedulerResponse))
     out.println(SchedulerEngineHelperUtil.getJobState(schedulerResponse))
     out.println(schedulerResponse)
+    // SchedulerEngineHelperUtil.delete(schedulerResponse.jobName, schedulerResponse.groupName, StorageType.PERSISTED)
 }
