@@ -84,23 +84,22 @@ for (Layout layout : layouts) {
                             jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
 
                             imageGroupId = jsonObject.getLong("groupId");
-                            // out.println("imageGroupId: " + imageGroupId)
+                            out.printl("imageGroupId: " + imageGroupId)
 
                             fileEntryId = jsonObject.getLong("fileEntryId")
-                            // out.println("fileEntryId: " + fileEntryId)
+                            out.printl("fileEntryId: " + fileEntryId)
 
                             uuid = jsonObject.getString("uuid")
-                            // out.println("uuid: " + uuid)
+                            out.printl("uuid: " + uuid)
 
-                            if (imageGroupId == staginGroupId && fileEntryId > 0) {
-//                                if (imageGroupId == liveGroupId && fileEntryId > 0) {
-
-                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
-                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
-
-                                out.println("stagingFileEntry: " + stagingFileEntry)
-                                out.println("liveFileEntry: " + liveFileEntry)
-                            }
+//                            if (imageGroupId == staginGroupId && fileEntryId > 0) {
+//
+//                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
+//                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
+//
+//                                out.println("stagingFileEntry: " + stagingFileEntry)
+//                                out.println("liveFileEntry: " + liveFileEntry)
+//                            }
                         }
                     }
                 }
@@ -108,4 +107,3 @@ for (Layout layout : layouts) {
         }
     }
 }
-    
