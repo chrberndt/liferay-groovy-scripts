@@ -79,7 +79,7 @@ for (Layout layout : layouts) {
                         localizedValue = value.getString(Locale.US)
                         // out.println(localizedValue)
 
-                        if (localizedValue.startsWith("{")) {
+                        if (localizedValue != null && localizedValue.startsWith("{")) {
 
                             jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
 
@@ -108,3 +108,4 @@ for (Layout layout : layouts) {
         }
     }
 }
+    
