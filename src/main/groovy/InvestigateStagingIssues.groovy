@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.PortletPreferences
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil
+import com.liferay.portal.kernel.util.LocaleUtil
 import com.liferay.portal.kernel.workflow.WorkflowConstants
 
 friendlyURL = "/bmw-product"
@@ -23,6 +24,7 @@ dynamicQuery.addOrder(OrderFactoryUtil.asc("groupId"))
 
 stagingGroupId = 1386890L
 liveGroupId = 419619L
+
 
 layouts = LayoutLocalServiceUtil.dynamicQuery(dynamicQuery, 0, 100)
 
@@ -79,40 +81,51 @@ for (Layout layout : layouts) {
 
                 for (DDMFormFieldValue ddmFormFieldValue : ddmFormFieldValues) {
 
-                    nestedFormFieldValues = ddmFormFieldValue.getNestedDDMFormFieldValues()
+                    firstNestedFormFieldValues = ddmFormFieldValue.getNestedDDMFormFieldValues()
 
-                    out.println("nestedFormFieldValues.size(): " + nestedFormFieldValues.size())
+                    out.println("firstNestedFormFieldValues.size(): " + firstNestedFormFieldValues.size())
 
-                    for (DDMFormFieldValue nestedFormFieldValue : nestedFormFieldValues) {
+                    for (DDMFormFieldValue firstNestedFormFieldValue : firstNestedFormFieldValues) {
 
-                        value = nestedFormFieldValue.value
+                        secondNestedFormFieldValues = firstNestedFormFieldValue.getNestedDDMFormFieldValues()
 
-                        if (value != null) {
+                        out.println("secondNestedFormFieldValues.size(): " + secondNestedFormFieldValues.size())
 
-                            localizedValue = value.getString(Locale.US)
-                            out.println(localizedValue)
+                        for (DDMFormFieldValue secondNestedFormFieldValue : secondNestedFormFieldValues) {
 
-                            if (localizedValue != null && localizedValue.startsWith("{")) {
+                            value = secondNestedFormFieldValue.value
 
-                                jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
+                            // out.println("value: " + value)
 
-                                imageGroupId = jsonObject.getLong("groupId");
-                                out.printl("imageGroupId: " + imageGroupId)
+                            if (value != null) {
 
-                                fileEntryId = jsonObject.getLong("fileEntryId")
-                                out.printl("fileEntryId: " + fileEntryId)
+                                localizedValue = value.getString(LocaleUtil.siteDefault)
 
-                                uuid = jsonObject.getString("uuid")
-                                out.printl("uuid: " + uuid)
+                                // out.println("localizedValue: " + localizedValue)
 
-    //                            if (imageGroupId == staginGroupId && fileEntryId > 0) {
-    //
-    //                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
-    //                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
-    //
-    //                                out.println("stagingFileEntry: " + stagingFileEntry)
-    //                                out.println("liveFileEntry: " + liveFileEntry)
-    //                            }
+                                if (localizedValue != null && localizedValue.startsWith("{")) {
+
+                                    jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
+
+                                    imageGroupId = jsonObject.getLong("groupId");
+                                    out.println("imageGroupId: " + imageGroupId)
+
+                                    fileEntryId = jsonObject.getLong("fileEntryId")
+                                    out.println("fileEntryId: " + fileEntryId)
+
+                                    uuid = jsonObject.getString("uuid")
+                                    out.println("uuid: " + uuid)
+                                    out.println()
+
+                                    if (fileEntryId > 0) {
+
+                                        stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
+                                        liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
+
+                                        out.println("stagingFileEntry: " + stagingFileEntry)
+                                        out.println("liveFileEntry: " + liveFileEntry)
+                                    }
+                                }
                             }
                         }
                     }
