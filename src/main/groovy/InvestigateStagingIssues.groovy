@@ -60,7 +60,7 @@ for (Layout layout : layouts) {
 
             ddmStructure = DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId)
 
-            out.println("ddmStructure: " + ddmStructure)
+            // out.println("ddmStructure: " + ddmStructure)
 
             if (ddmStructure != null) {
                 // out.println(ddmStructure)
@@ -71,17 +71,24 @@ for (Layout layout : layouts) {
 
                 ddmFormValues = DDMFieldLocalServiceUtil.getDDMFormValues(ddmForm, id)
 
-                out.println("ddmFormValues: " + ddmFormValues)
+                // out.println("ddmFormValues: " + ddmFormValues)
 
                 ddmFormFieldValues = ddmFormValues.getDDMFormFieldValues()
 
-                out.println("ddmFormFieldValues: " + ddmFormFieldValues)
+                // out.println("ddmFormFieldValues: " + ddmFormFieldValues)
 
                 for (DDMFormFieldValue ddmFormFieldValue : ddmFormFieldValues) {
 
                     value = ddmFormFieldValue.value
 
+                    out.println("value: " + value)
+
+                    nestedFormFieldValues = ddmFormFieldValue.getNestedDDMFormFieldValues()
+
+                    out.println("nestedFormFieldValues.size(): " + nestedFormFieldValues.size())
+
                     if (value != null) {
+
                         localizedValue = value.getString(Locale.US)
                         // out.println(localizedValue)
 
