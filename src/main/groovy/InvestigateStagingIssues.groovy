@@ -1,7 +1,10 @@
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil
 import com.liferay.portal.kernel.model.Layout
+import com.liferay.portal.kernel.model.PortletPreferences
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil
+import com.liferay.portal.kernel.service.PortletPreferenceValueLocalServiceUtil
+import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil
 
 friendlyURL = "/bmw-product"
 
@@ -21,7 +24,22 @@ for (Layout layout : layouts) {
     plid = layout.plid
 
     out.println("groupId: " + groupId)
-    out.println("plid: " + plid)
+//    out.println("plid: " + plid)
 
+    portletPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferencesByPlid(layout.plid)
+
+    out.println("portletPreferences.size(): " + portletPreferences.size())
+    out.println()
+
+    for (PortletPreferences preferences : portletPreferences) {
+        // out.println(preferences.portletPreferencesId)
+
+        prefs = PortletPreferenceValueLocalServiceUtil.getPreferences(preferences)
+
+        articleId = prefs.getValue("articleId", null)
+
+        out.println("articleId: " + articleId)
+    }
 
 }
+    
