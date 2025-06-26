@@ -79,40 +79,41 @@ for (Layout layout : layouts) {
 
                 for (DDMFormFieldValue ddmFormFieldValue : ddmFormFieldValues) {
 
-                    value = ddmFormFieldValue.value
-
-                    out.println("value: " + value)
-
                     nestedFormFieldValues = ddmFormFieldValue.getNestedDDMFormFieldValues()
 
                     out.println("nestedFormFieldValues.size(): " + nestedFormFieldValues.size())
 
-                    if (value != null) {
+                    for (DDMFormFieldValue nestedFormFieldValue : nestedFormFieldValues) {
 
-                        localizedValue = value.getString(Locale.US)
-                        // out.println(localizedValue)
+                        value = nestedFormFieldValue.value
 
-                        if (localizedValue != null && localizedValue.startsWith("{")) {
+                        if (value != null) {
 
-                            jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
+                            localizedValue = value.getString(Locale.US)
+                            out.println(localizedValue)
 
-                            imageGroupId = jsonObject.getLong("groupId");
-                            out.printl("imageGroupId: " + imageGroupId)
+                            if (localizedValue != null && localizedValue.startsWith("{")) {
 
-                            fileEntryId = jsonObject.getLong("fileEntryId")
-                            out.printl("fileEntryId: " + fileEntryId)
+                                jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
 
-                            uuid = jsonObject.getString("uuid")
-                            out.printl("uuid: " + uuid)
+                                imageGroupId = jsonObject.getLong("groupId");
+                                out.printl("imageGroupId: " + imageGroupId)
 
-//                            if (imageGroupId == staginGroupId && fileEntryId > 0) {
-//
-//                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
-//                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
-//
-//                                out.println("stagingFileEntry: " + stagingFileEntry)
-//                                out.println("liveFileEntry: " + liveFileEntry)
-//                            }
+                                fileEntryId = jsonObject.getLong("fileEntryId")
+                                out.printl("fileEntryId: " + fileEntryId)
+
+                                uuid = jsonObject.getString("uuid")
+                                out.printl("uuid: " + uuid)
+
+    //                            if (imageGroupId == staginGroupId && fileEntryId > 0) {
+    //
+    //                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
+    //                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
+    //
+    //                                out.println("stagingFileEntry: " + stagingFileEntry)
+    //                                out.println("liveFileEntry: " + liveFileEntry)
+    //                            }
+                            }
                         }
                     }
                 }
