@@ -1,8 +1,11 @@
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil
 import com.liferay.dynamic.data.mapping.service.DDMFieldLocalServiceUtil
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil
+import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue
 import com.liferay.journal.service.JournalArticleLocalServiceUtil
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil
+import com.liferay.portal.kernel.json.JSONFactoryUtil
 import com.liferay.portal.kernel.model.Layout
 import com.liferay.portal.kernel.model.PortletPreferences
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil
@@ -18,9 +21,12 @@ dynamicQuery = LayoutLocalServiceUtil.dynamicQuery()
 dynamicQuery.add(RestrictionsFactoryUtil.eq("friendlyURL", friendlyURL))
 dynamicQuery.addOrder(OrderFactoryUtil.asc("groupId"))
 
+stagingGroupId = 1386890L
+liveGroupId = 419619L
+
 layouts = LayoutLocalServiceUtil.dynamicQuery(dynamicQuery, 0, 100)
 
-out.println("layouts.size(): " + layouts.size())
+// out.println("layouts.size(): " + layouts.size())
 
 for (Layout layout : layouts) {
 
@@ -48,7 +54,7 @@ for (Layout layout : layouts) {
 
             content = journalArticle.getContent()
 
-            out.println(content)
+            // out.println(content)
 
             ddmStructureId = journalArticle.getDDMStructureId()
 
@@ -64,9 +70,41 @@ for (Layout layout : layouts) {
                 ddmFormValues = DDMFieldLocalServiceUtil.getDDMFormValues(ddmForm, id)
 
                 ddmFormFieldValues = ddmFormValues.getDDMFormFieldValues()
+
+                for (DDMFormFieldValue ddmFormFieldValue : ddmFormFieldValues) {
+
+                    value = ddmFormFieldValue.value
+
+                    if (value != null) {
+                        localizedValue = value.getString(Locale.US)
+                        // out.println(localizedValue)
+
+                        if (localizedValue.startsWith("{")) {
+
+                            jsonObject = JSONFactoryUtil.createJSONObject(localizedValue)
+
+                            imageGroupId = jsonObject.getLong("groupId");
+                            // out.println("imageGroupId: " + imageGroupId)
+
+                            fileEntryId = jsonObject.getLong("fileEntryId")
+                            // out.println("fileEntryId: " + fileEntryId)
+
+                            uuid = jsonObject.getString("uuid")
+                            // out.println("uuid: " + uuid)
+
+                            if (imageGroupId == staginGroupId && fileEntryId > 0) {
+//                                if (imageGroupId == liveGroupId && fileEntryId > 0) {
+
+                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
+                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
+
+                                out.println("stagingFileEntry: " + stagingFileEntry)
+                                out.println("liveFileEntry: " + liveFileEntry)
+                            }
+                        }
+                    }
+                }
             }
         }
-
     }
-
 }
