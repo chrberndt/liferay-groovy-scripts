@@ -1,3 +1,6 @@
+import com.liferay.dynamic.data.mapping.service.DDMFieldLocalServiceUtil
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil
+import com.liferay.journal.service.JournalArticleLocalServiceUtil
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil
 import com.liferay.portal.kernel.model.Layout
@@ -5,6 +8,7 @@ import com.liferay.portal.kernel.model.PortletPreferences
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil
+import com.liferay.portal.kernel.workflow.WorkflowConstants
 
 friendlyURL = "/bmw-product"
 
@@ -24,7 +28,7 @@ for (Layout layout : layouts) {
     plid = layout.plid
 
     out.println("groupId: " + groupId)
-//    out.println("plid: " + plid)
+    out.println("plid: " + plid)
 
     portletPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferencesByPlid(layout.plid)
 
@@ -38,8 +42,31 @@ for (Layout layout : layouts) {
 
         articleId = prefs.getValue("articleId", null)
 
-        out.println("articleId: " + articleId)
+        if (articleId != null) {
+
+            journalArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(layout.groupId, articleId, WorkflowConstants.STATUS_APPROVED)
+
+            content = journalArticle.getContent()
+
+            out.println(content)
+
+            ddmStructureId = journalArticle.getDDMStructureId()
+
+            ddmStructure = DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId)
+
+            if (ddmStructure != null) {
+                // out.println(ddmStructure)
+
+                ddmForm = ddmStructure.getDDMForm()
+
+                id = journalArticle.id
+
+                ddmFormValues = DDMFieldLocalServiceUtil.getDDMFormValues(ddmForm, id)
+
+                ddmFormFieldValues = ddmFormValues.getDDMFormFieldValues()
+            }
+        }
+
     }
 
 }
-    
