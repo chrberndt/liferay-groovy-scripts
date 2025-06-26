@@ -60,6 +60,8 @@ for (Layout layout : layouts) {
 
             ddmStructure = DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId)
 
+            out.println("ddmStructure: " + ddmStructure)
+
             if (ddmStructure != null) {
                 // out.println(ddmStructure)
 
@@ -69,7 +71,11 @@ for (Layout layout : layouts) {
 
                 ddmFormValues = DDMFieldLocalServiceUtil.getDDMFormValues(ddmForm, id)
 
+                out.println("ddmFormValues: " + ddmFormValues)
+
                 ddmFormFieldValues = ddmFormValues.getDDMFormFieldValues()
+
+                out.println("ddmFormFieldValues: " + ddmFormFieldValues)
 
                 for (DDMFormFieldValue ddmFormFieldValue : ddmFormFieldValues) {
 
