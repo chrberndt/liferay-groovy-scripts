@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.PortletPreferences
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil
+import com.liferay.portal.kernel.service.ServiceContext
 import com.liferay.portal.kernel.util.LocaleUtil
 import com.liferay.portal.kernel.workflow.WorkflowConstants
 
@@ -119,11 +120,36 @@ for (Layout layout : layouts) {
 
                                     if (fileEntryId > 0) {
 
-                                        stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, staginGroupId)
+                                        stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, stagingGroupId)
                                         liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
 
                                         out.println("stagingFileEntry: " + stagingFileEntry)
                                         out.println("liveFileEntry: " + liveFileEntry)
+
+                                        groupIdFrom = "{\"groupId\":\"" + stagingFileEntry.groupId + "\""
+                                        groupIdTo = "{\"groupId\":\"" + liveFileEntry.groupId + "\""
+
+                                        fileEntryIdFrom = "\"fileEntryId\":\"" + stagingFileEntry.fileEntryId + "\""
+                                        fileEntryIdTo = "\"fileEntryId\":\"" + liveFileEntry.fileEntryId + "\""
+
+                                        out.println(content)
+
+                                        content = content.replace(groupIdFrom, groupIdTo)
+                                        content = content.replace(fileEntryIdFrom, fileEntryIdTo)
+
+                                        out.println(content)
+
+//                                        serviceContext = new ServiceContext()
+//                                        serviceContext.setScopeGroupId(journalArticle.groupId)
+//
+//                                        JournalArticleLocalServiceUtil.updateArticle(journalArticle.userId,
+//                                                journalArticle.groupId,
+//                                                journalArticle.folderId,
+//                                                journalArticle.articleId,
+//                                                journalArticle.version,
+//                                                content,
+//                                                serviceContext)
+//
                                     }
                                 }
                             }
