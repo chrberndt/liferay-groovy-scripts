@@ -2,6 +2,7 @@ import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil
 import com.liferay.dynamic.data.mapping.service.DDMFieldLocalServiceUtil
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue
+import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal
 import com.liferay.journal.service.JournalArticleLocalServiceUtil
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil
@@ -25,6 +26,8 @@ dynamicQuery.addOrder(OrderFactoryUtil.asc("groupId"))
 
 stagingGroupId = 1386890L
 liveGroupId = 419619L
+
+anonymousUserId = 0
 
 
 layouts = LayoutLocalServiceUtil.dynamicQuery(dynamicQuery, 0, 100)
@@ -123,8 +126,8 @@ for (Layout layout : layouts) {
                                         stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, stagingGroupId)
                                         liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
 
-                                        out.println("stagingFileEntry: " + stagingFileEntry)
-                                        out.println("liveFileEntry: " + liveFileEntry)
+//                                        out.println("stagingFileEntry: " + stagingFileEntry)
+//                                        out.println("liveFileEntry: " + liveFileEntry)
 
                                         groupIdFrom = "{\"groupId\":\"" + stagingFileEntry.groupId + "\""
                                         groupIdTo = "{\"groupId\":\"" + liveFileEntry.groupId + "\""
@@ -132,24 +135,28 @@ for (Layout layout : layouts) {
                                         fileEntryIdFrom = "\"fileEntryId\":\"" + stagingFileEntry.fileEntryId + "\""
                                         fileEntryIdTo = "\"fileEntryId\":\"" + liveFileEntry.fileEntryId + "\""
 
-                                        out.println(content)
+//                                        out.println(content)
 
                                         content = content.replace(groupIdFrom, groupIdTo)
                                         content = content.replace(fileEntryIdFrom, fileEntryIdTo)
 
-                                        out.println(content)
+//                                        out.println(content)
 
-//                                        serviceContext = new ServiceContext()
-//                                        serviceContext.setScopeGroupId(journalArticle.groupId)
-//
-//                                        JournalArticleLocalServiceUtil.updateArticle(journalArticle.userId,
-//                                                journalArticle.groupId,
-//                                                journalArticle.folderId,
-//                                                journalArticle.articleId,
-//                                                journalArticle.version,
-//                                                content,
-//                                                serviceContext)
-//
+                                        out.println("articleId: " + journalArticle.articleId)
+                                        out.println("version: " + journalArticle.version)
+
+                                        serviceContext = new ServiceContext()
+                                        serviceContext.setScopeGroupId(journalArticle.groupId)
+
+                                        ExportImportThreadLocal.setLayoutImportInProcess(true)
+
+                                        JournalArticleLocalServiceUtil.updateArticle(anonymousUserId,
+                                                journalArticle.groupId,
+                                                journalArticle.folderId,
+                                                journalArticle.articleId,
+                                                journalArticle.version,
+                                                content,
+                                                serviceContext)
                                     }
                                 }
                             }
