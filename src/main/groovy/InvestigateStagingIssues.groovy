@@ -18,13 +18,13 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants
 
 
 stagingGroupId = 1386890L
-//stagingGroupId = 33700L
+// stagingGroupId = 33700L
 liveGroupId = 419619L
-//liveGroupId = 34559L
+// liveGroupId = 34559L
 
 dynamicQuery = LayoutLocalServiceUtil.dynamicQuery()
 dynamicQuery.add(RestrictionsFactoryUtil.eq("groupId", liveGroupId))
-//dynamicQuery.add(RestrictionsFactoryUtil.eq("groupId", stagingGroupId))
+// dynamicQuery.add(RestrictionsFactoryUtil.eq("groupId", stagingGroupId))
 dynamicQuery.addOrder(OrderFactoryUtil.asc("plid"))
 
 anonymousUserId = 0
@@ -102,8 +102,20 @@ for (Layout layout : layouts) {
 
                                         if (fileEntryId > 0) {
 
-                                            stagingFileEntry = DLAppLocalServiceUtil.fetchFileEntryByExternalReferenceCode(stagingGroupId, uuid)
-                                            liveFileEntry = DLAppLocalServiceUtil.fetchFileEntryByExternalReferenceCode(liveGroupId, uuid)
+                                            stagingFileEntry = null
+                                            liveFileEntry = null
+
+                                            try {
+                                                stagingFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, stagingGroupId)
+                                            } catch (Exception ignore) {
+                                                out.println("ERROR: Could not find stagingFileEntry with uuid " + uuid)
+                                            }
+
+                                            try {
+                                                liveFileEntry = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, liveGroupId)
+                                            } catch (Exception ignore) {
+                                                out.println("ERROR: Could not find liveFileEntry with uuid " + uuid)
+                                            }
 
                                             out.println("stagingFileEntry: " + stagingFileEntry)
                                             out.println("liveFileEntry: " + liveFileEntry)
