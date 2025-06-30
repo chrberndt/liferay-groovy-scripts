@@ -9,10 +9,12 @@ import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil
 import com.liferay.portal.kernel.json.JSONFactoryUtil
 import com.liferay.portal.kernel.model.Layout
 import com.liferay.portal.kernel.model.PortletPreferences
+import com.liferay.portal.kernel.model.User
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalServiceUtil
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil
 import com.liferay.portal.kernel.service.ServiceContext
+import com.liferay.portal.kernel.service.UserLocalServiceUtil
 import com.liferay.portal.kernel.util.LocaleUtil
 import com.liferay.portal.kernel.workflow.WorkflowConstants
 
@@ -136,7 +138,15 @@ for (Layout layout : layouts) {
 
                                                 ExportImportThreadLocal.setLayoutImportInProcess(true)
 
-//                                                JournalArticleLocalServiceUtil.updateArticle(anonymousUserId,
+                                                userId = anonymousUserId
+
+                                                User user = UserLocalServiceUtil.fetchUser(journalArticle.userId)
+                                                if (user != null) {
+                                                    userId = journalArticle.userId
+                                                }
+
+
+//                                                JournalArticleLocalServiceUtil.updateArticle(userId,
 //                                                        journalArticle.groupId,
 //                                                        journalArticle.folderId,
 //                                                        journalArticle.articleId,
