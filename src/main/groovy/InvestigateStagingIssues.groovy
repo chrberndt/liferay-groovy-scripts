@@ -29,7 +29,7 @@ dynamicQuery.add(RestrictionsFactoryUtil.eq("groupId", liveGroupId))
 // dynamicQuery.add(RestrictionsFactoryUtil.eq("groupId", stagingGroupId))
 dynamicQuery.addOrder(OrderFactoryUtil.asc("plid"))
 
-anonymousUserId = 0
+anonymousUserId = 27673305
 
 layouts = LayoutLocalServiceUtil.dynamicQuery(dynamicQuery, 0, 5000)
 
